@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Selenium / ChromeDriver cache
+.wdm/
+chromedriver.exe
+chromedriver
+chromedriver_win32/
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
+
+# Environment & OS files
+.env
+*.env
+.DS_Store
+Thumbs.db
+
+# Pytest cache
+pytest_cache/
+.pytest_cache/
+
+# Virtual environment
+venv/
+env/

@@ -1,89 +1,120 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const quizContainer = document.getElementById('quiz-container');
-    const resultContainer = document.getElementById('result-container');
-    const timerDisplay = document.getElementById('timer');
-    let currentQuestionIndex = 0;
-    let score = 0;
+    const questionsContainer = document.getElementById('questions-container');
+    const quizForm = document.getElementById('quiz-form');
+    const timerDisplay = document.getElementById('time');
+    let questions = [];
     let timer;
-    const totalQuestions = 10; // Adjust based on your quiz
+    let timeLeft = 60; // 60 seconds total
 
-    function loadQuestion() {
-        fetch('api/get_quiz.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    const question = data[currentQuestionIndex];
-                    displayQuestion(question);
-                } else {
-                    showResults();
+    // Get category from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'science';
+
+    function loadQuestions() {
+        // Use absolute path from server root
+        const apiPath = `/quiz-application/src/php/api/get_quiz.php?category=${category}`;
+        fetch(apiPath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                return response.json();
             })
-            .catch(error => console.error('Error fetching quiz:', error));
+            .then(data => {
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    questionsContainer.innerHTML = `<p>Error loading questions: ${data.error}</p>`;
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    console.error('No questions received');
+                    questionsContainer.innerHTML = '<p>No questions available for this category.</p>';
+                    return;
+                }
+                questions = data;
+                renderQuestions(data);
+                startTimer();
+            })
+            .catch(error => {
+                console.error('Error fetching quiz:', error);
+                questionsContainer.innerHTML = `<p>Error loading quiz: ${error.message}</p>`;
+            });
     }
 
-    function displayQuestion(question) {
-        quizContainer.innerHTML = `
-            <h2>${question.question}</h2>
-            ${question.answers.map((answer, index) => `
-                <div>
-                    <input type="radio" name="answer" id="answer${index}" value="${answer}">
-                    <label for="answer${index}">${answer}</label>
-                </div>
-            `).join('')}
-            <button id="next-button">Next</button>
-        `;
-        document.getElementById('next-button').addEventListener('click', checkAnswer);
-        startTimer();
-    }
-
-    function checkAnswer() {
-        const selectedAnswer = document.querySelector('input[name="answer"]:checked');
-        if (selectedAnswer) {
-            if (selectedAnswer.value === currentQuestion.correctAnswer) {
-                score++;
-            }
-            currentQuestionIndex++;
-            if (currentQuestionIndex < totalQuestions) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        } else {
-            alert('Please select an answer before proceeding.');
-        }
-    }
-
-    function showResults() {
-        clearInterval(timer);
-        quizContainer.style.display = 'none';
-        resultContainer.innerHTML = `
-            <h2>Your Score: ${score} / ${totalQuestions}</h2>
-            <button id="restart-button">Restart Quiz</button>
-        `;
-        document.getElementById('restart-button').addEventListener('click', restartQuiz);
-    }
-
-    function restartQuiz() {
-        currentQuestionIndex = 0;
-        score = 0;
-        resultContainer.innerHTML = '';
-        quizContainer.style.display = 'block';
-        loadQuestion();
+    function renderQuestions(questionsData) {
+        questionsContainer.innerHTML = '';
+        questionsData.forEach((question, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-item';
+            questionDiv.innerHTML = `
+                <h3>${question.question}</h3>
+                ${question.options.map((option, i) => `
+                    <div>
+                        <input type="radio" name="question${index}" id="q${index}opt${i}" value="${option}">
+                        <label for="q${index}opt${i}">${option}</label>
+                    </div>
+                `).join('')}
+            `;
+            questionsContainer.appendChild(questionDiv);
+        });
     }
 
     function startTimer() {
-        let timeLeft = 30; // 30 seconds for each question
-        timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+        if (timer) clearInterval(timer);
+        timeLeft = 60;
+        if (timerDisplay) {
+            timerDisplay.textContent = timeLeft;
+        }
         timer = setInterval(() => {
             timeLeft--;
-            timerDisplay.textContent = `Time Left: ${timeLeft}s`;
+            if (timerDisplay) {
+                timerDisplay.textContent = timeLeft;
+            }
             if (timeLeft <= 0) {
                 clearInterval(timer);
-                alert('Time is up!');
-                checkAnswer(); // Automatically check answer if time runs out
+                submitQuiz();
             }
         }, 1000);
     }
 
-    loadQuestion();
+    function submitQuiz() {
+        clearInterval(timer);
+        const formData = new FormData(quizForm);
+        const answers = {};
+        
+        questions.forEach((question, index) => {
+            const selected = document.querySelector(`input[name="question${index}"]:checked`);
+            if (selected) {
+                answers[index] = selected.value;
+            }
+        });
+
+        fetch('/quiz-application/src/php/api/submit_quiz.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ answers, questions })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            window.location.href = '/quiz-application/src/html/results.html';
+        })
+        .catch(error => {
+            console.error('Error submitting quiz:', error);
+            alert('Error submitting quiz. Please try again.');
+        });
+    }
+
+    quizForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitQuiz();
+    });
+
+    loadQuestions();
 });

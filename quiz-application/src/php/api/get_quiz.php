@@ -25,14 +25,39 @@ $quizzes = [
             'options' => ['2', '3', '4', '5'],
             'answer' => '4'
         ]
+    ],
+    'general' => [
+        [
+            'question' => 'What is the capital of France?',
+            'options' => ['London', 'Berlin', 'Paris', 'Madrid'],
+            'answer' => 'Paris'
+        ],
+        [
+            'question' => 'What is the largest ocean?',
+            'options' => ['Atlantic', 'Indian', 'Arctic', 'Pacific'],
+            'answer' => 'Pacific'
+        ]
+    ],
+    'history' => [
+        [
+            'question' => 'In which year did World War II end?',
+            'options' => ['1943', '1944', '1945', '1946'],
+            'answer' => '1945'
+        ],
+        [
+            'question' => 'Who was the first President of the United States?',
+            'options' => ['Thomas Jefferson', 'John Adams', 'George Washington', 'Benjamin Franklin'],
+            'answer' => 'George Washington'
+        ]
     ]
 ];
 
-$category = isset($_GET['category']) ? $_GET['category'] : null;
+$category = isset($_GET['category']) ? $_GET['category'] : 'science';
 
-if ($category && array_key_exists($category, $quizzes)) {
+if (array_key_exists($category, $quizzes)) {
     echo json_encode($quizzes[$category]);
 } else {
-    echo json_encode(['error' => 'Invalid category']);
+    // Default to science if category not found
+    echo json_encode($quizzes['science']);
 }
 ?>

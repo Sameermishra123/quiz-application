@@ -5,19 +5,25 @@ import time
 
 def test_timer_functionality(driver):
 
-    # Start Quiz
+    # Start quiz
     start_btn = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "button[type='submit']"))
     )
     start_btn.click()
 
-    # Locate timer span
-    timer_value = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.ID, "time"))
+    # Wait for quiz page to load
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "questions-container"))
+    )
+    
+    # Timer span
+    timer_span = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "time"))
     )
 
-    first = timer_value.text
+    first = timer_span.text
     time.sleep(2)
-    second = timer_value.text
+    second = timer_span.text
 
+    # Timer must decrease
     assert first != second, "❌ Timer did NOT decrease!"

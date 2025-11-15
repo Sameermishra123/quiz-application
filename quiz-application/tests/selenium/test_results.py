@@ -10,8 +10,13 @@ def test_results_display(driver):
     )
     start_btn.click()
 
-    # Choose first answer
-    first_opt = WebDriverWait(driver, 10).until(
+    # Wait for quiz page to load
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "questions-container"))
+    )
+    
+    # Select first answer
+    first_opt = WebDriverWait(driver, 15).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "#questions-container input[type='radio']"))
     )
     first_opt.click()
@@ -20,13 +25,13 @@ def test_results_display(driver):
     submit_btn = driver.find_element(By.CSS_SELECTOR, "button[type='submit']")
     submit_btn.click()
 
-    # Check Results header
+    # Page must show header
     header = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.TAG_NAME, "h1"))
     )
     assert "Results" in header.text or "Your Quiz Results" in header.text
 
-    # Check for Chart.js canvas
+    # Chart canvas must exist
     chart = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "resultsChart"))
     )

@@ -35,7 +35,7 @@ function renderChart(labels, data) {
 }
 
 function fetchResults() {
-    fetch('/api/get_results.php')
+    fetch('/quiz-application/src/php/api/get_results.php')
         .then(response => response.json())
         .then(data => {
             const labels = data.labels;
