@@ -10,25 +10,27 @@
     <header>
         <h1>Welcome to the Quiz Application</h1>
     </header>
+
     <main>
         <section id="quiz-selection">
             <h2>Select Quiz Category and Difficulty</h2>
-            <form id="quiz-form" action="quiz.html" method="get">
-                <label for="category">Category:</label>
-                <select id="category" name="category">
+
+            <form id="quiz-form">
+                <label>Category:</label>
+                <select id="category">
                     <option value="general">General Knowledge</option>
-                    <option value="science">Science</option>
-                    <option value="history">History</option>
                 </select>
-                <label for="difficulty">Difficulty:</label>
-                <select id="difficulty" name="difficulty">
+
+                <label>Difficulty:</label>
+                <select id="difficulty">
                     <option value="easy">Easy</option>
-                    <option value="medium">Medium</option>
-                    <option value="hard">Hard</option>
                 </select>
-                <button type="submit">Start Quiz</button>
+
+                <button id="start-quiz" type="submit">Start Quiz</button>
             </form>
         </section>
     </main>
+
+    <script src="../js/main.js"></script>
 </body>
 </html>

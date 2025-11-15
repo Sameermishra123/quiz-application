@@ -16,7 +16,8 @@ def driver():
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.set_window_size(1920, 1080)
 
-    driver.get("http://localhost:8000/src/html/index.html")
+    # FIXED: Point to the root-level index.php instead of src/html/index.html
+    driver.get("http://localhost:8000/index.php")
 
     yield driver
     driver.quit()
