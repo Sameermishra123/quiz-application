@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <link rel="stylesheet" href="../css/results.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="results-container">
+        <h1>Your Quiz Results</h1>
+        <div id="score-summary">
+            <h2>Score: <span id="score"></span></h2>
+            <h3>Correct Answers: <span id="correct-answers"></span></h3>
+            <h3>Incorrect Answers: <span id="incorrect-answers"></span></h3>
+        </div>
+        <canvas id="resultsChart"></canvas>
+        <button onclick="window.location.href='index.html'">Take Another Quiz</button>
+    </div>
+    <script src="../js/charts.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

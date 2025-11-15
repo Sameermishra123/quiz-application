@@ -1,0 +1,23 @@
+{
+  "name": "quiz-application",
+  "version": "1.0.0",
+  "description": "A dynamic quiz application with timer and result analysis.",
+  "main": "index.php",
+  "scripts": {
+    "start": "php -S localhost:8000 -t public",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "chart.js": "^3.7.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "quiz",
+    "application",
+    "timer",
+    "results",
+    "analysis"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Quiz Application</h1>
+    </header>
+    <main>
+        <section id="quiz-selection">
+            <h2>Select Quiz Category and Difficulty</h2>
+            <form id="quiz-form">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="general">General Knowledge</option>
+                    <option value="science">Science</option>
+                    <option value="history">History</option>
+                </select>
+                <label for="difficulty">Difficulty:</label>
+                <select id="difficulty" name="difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+                <button type="submit">Start Quiz</button>
+            </form>
+        </section>
+    </main>
+    <script src="../js/main.js"></script>
+</body>
+</html>
